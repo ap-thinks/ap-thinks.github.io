@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anwida Prompijit — Analytics Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:      #0D1B2A;
+      --navy-card: #132236;
+      --teal:      #4A8FE7;
+      --teal-dim:  rgba(74,143,231,0.10);
+      --white:     #F0F4F8;
+      --slate:     #8899AA;
+      --amber:     #F6C90E;
+      --mono:      'JetBrains Mono', monospace;
+      --sans:      'Inter', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,27,42,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(74,143,231,0.12);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 56px;
+    }
+    .nav-brand { font-family: var(--mono); font-size: 0.82rem; color: var(--teal); letter-spacing: 0.04em; }
+    .nav-right { font-family: var(--mono); font-size: 0.75rem; color: var(--slate); }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 860px; margin: 0 auto;
+      padding: 6rem 2rem 3rem;
+    }
+    .hero-eyebrow {
+      font-family: var(--mono); font-size: 0.72rem; color: var(--teal);
+      letter-spacing: 0.12em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.2rem;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: inline-block; width: 28px; height: 1px; background: var(--teal);
+    }
+    h1 {
+      font-size: clamp(2.2rem, 6vw, 3.8rem);
+      font-weight: 700; line-height: 1.08;
+      letter-spacing: -0.025em; margin-bottom: 1.2rem;
+    }
+    h1 .teal { color: var(--teal); }
+    .hero-desc {
+      font-size: 1rem; color: var(--slate); max-width: 580px;
+      line-height: 1.75; margin-bottom: 2rem;
+    }
+    .hero-desc strong { color: var(--white); font-weight: 500; }
+
+    /* ── CREDENTIAL CHIPS ── */
+    .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 3rem; }
+    .chip {
+      font-family: var(--mono); font-size: 0.7rem;
+      border: 1px solid rgba(74,143,231,0.25);
+      background: var(--teal-dim); color: var(--teal);
+      border-radius: 4px; padding: 0.3rem 0.7rem;
+    }
+    .chip.slate {
+      border-color: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04); color: var(--slate);
+    }
+
+    /* ── PROJECTS ── */
+    .projects-header {
+      max-width: 860px; margin: 0 auto; padding: 0 2rem 1.5rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .projects-header span {
+      font-family: var(--mono); font-size: 0.7rem;
+      color: var(--slate); letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .projects-header::after {
+      content: ''; flex: 1; height: 1px; background: rgba(74,143,231,0.12);
+    }
+
+    .projects { max-width: 860px; margin: 0 auto; padding: 0 2rem 4rem; display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .project-card {
+      background: var(--navy-card);
+      border: 1px solid rgba(74,143,231,0.12);
+      border-radius: 12px;
+      padding: 2rem 2rem 1.6rem;
+      text-decoration: none; color: inherit;
+      display: block;
+      transition: border-color 0.25s, transform 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .project-card:hover {
+      border-color: rgba(74,143,231,0.45);
+      transform: translateY(-2px);
+    }
+    .project-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--teal), transparent);
+      opacity: 0; transition: opacity 0.25s;
+    }
+    .project-card:hover::before { opacity: 1; }
+
+    .card-top {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 1rem; margin-bottom: 1rem;
+    }
+    .card-domain {
+      font-family: var(--mono); font-size: 0.65rem; color: var(--teal);
+      letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.4rem;
+    }
+    .card-title {
+      font-size: 1.25rem; font-weight: 600; line-height: 1.25;
+      letter-spacing: -0.01em;
+    }
+    .card-arrow {
+      font-size: 1.3rem; color: var(--teal);
+      opacity: 0; transition: opacity 0.2s, transform 0.2s;
+      flex-shrink: 0; margin-top: 4px;
+    }
+    .project-card:hover .card-arrow { opacity: 1; transform: translateX(4px); }
+
+    .card-desc {
+      font-size: 0.88rem; color: var(--slate); line-height: 1.65;
+      margin-bottom: 1.4rem; max-width: 680px;
+    }
+
+    .card-metrics {
+      display: flex; gap: 1.5rem; flex-wrap: wrap;
+      padding-top: 1.2rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .metric { }
+    .metric-val {
+      font-family: var(--mono); font-size: 1rem; font-weight: 600;
+      color: var(--teal); line-height: 1;
+    }
+    .metric-lab {
+      font-family: var(--mono); font-size: 0.62rem; color: var(--slate);
+      letter-spacing: 0.06em; text-transform: uppercase; margin-top: 0.2rem;
+    }
+
+    .card-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+    .tag {
+      font-family: var(--mono); font-size: 0.65rem;
+      background: rgba(255,255,255,0.04);
+      color: var(--slate); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 3px; padding: 0.2rem 0.5rem;
+    }
+
+    /* ── ABOUT STRIP ── */
+    .about {
+      border-top: 1px solid rgba(255,255,255,0.05);
+      background: rgba(74,143,231,0.03);
+    }
+    .about-inner {
+      max-width: 860px; margin: 0 auto; padding: 3rem 2rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+    }
+    .about-section-label {
+      font-family: var(--mono); font-size: 0.68rem; color: var(--teal);
+      letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1rem;
+    }
+    .about-item { margin-bottom: 0.9rem; }
+    .about-item-title {
+      font-size: 0.88rem; font-weight: 500; color: var(--white); margin-bottom: 0.15rem;
+    }
+    .about-item-sub {
+      font-size: 0.78rem; color: var(--slate); line-height: 1.5;
+    }
+    .about-item-sub a { color: var(--teal); text-decoration: none; }
+    .about-item-sub a:hover { text-decoration: underline; }
+
+    .skills-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+    .skill-tag {
+      font-family: var(--mono); font-size: 0.65rem;
+      background: var(--teal-dim); color: var(--teal);
+      border: 1px solid rgba(74,143,231,0.2);
+      border-radius: 3px; padding: 0.2rem 0.5rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 1.5rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 0.8rem;
+      max-width: 860px; margin: 0 auto;
+    }
+    footer p { font-family: var(--mono); font-size: 0.7rem; color: var(--slate); }
+    footer a { font-family: var(--mono); font-size: 0.7rem; color: var(--teal); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 640px) {
+      .about-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .card-metrics { gap: 1rem; }
+      nav { padding: 0 1rem; }
+      .hero, .projects, .projects-header { padding-left: 1rem; padding-right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">ap-thinks.github.io</span>
+  <span class="nav-right">Analytics Portfolio</span>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Analytics · Machine Learning · Fintech</div>
+  <h1>Anwida<br><span class="teal">Prompijit</span></h1>
+  <p class="hero-desc">
+    Analyst with a <strong>Ph.D. in Information Systems</strong> and 2+ years of industry experience
+    turning complex data into decisions. Doctoral research applied causal inference and
+    supervised ML to millions of individual-level behavioral records.
+    Deeply focused on <strong>consumer lending, risk optimization,</strong> and the application
+    of machine learning to fintech problems.
+  </p>
+  <div class="chips">
+    <span class="chip">SQL · Python · R</span>
+    <span class="chip">Scikit-learn · Pandas</span>
+    <span class="chip">Claude Code · Cursor · Copilot</span>
+    <span class="chip">Looker · Power BI · Tableau</span>
+    <span class="chip">Snowflake · AWS</span>
+    <span class="chip slate">Ph.D. UC Irvine</span>
+    <span class="chip slate">M.S. University of Michigan · Fulbright Scholar</span>
+    <span class="chip slate">anwida@gmail.com</span>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<div class="projects-header">
+  <span>Projects</span>
+</div>
+
+<div class="projects">
+
+  <!-- Project 1 -->
+  <a class="project-card" href="./credit-default-prediction/">
+    <div class="card-top">
+      <div>
+        <div class="card-domain">Credit Risk · Machine Learning · Consumer Lending</div>
+        <div class="card-title">Credit Default Prediction</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </div>
+    <p class="card-desc">
+      Binary classification model estimating borrower repayment risk using 150K real records.
+      The core of the project is a <strong>threshold sweep that quantifies the approval rate vs. default rate
+      vs. expected loss tradeoff</strong> across risk appetite scenarios — framing the model
+      as a business decision tool. Includes fair lending audit by age group (ECOA proxy).
+    </p>
+    <div class="card-metrics">
+      <div class="metric">
+        <div class="metric-val">0.87</div>
+        <div class="metric-lab">Random Forest AUC</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">150K</div>
+        <div class="metric-lab">Borrower Records</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">3</div>
+        <div class="metric-lab">Risk Scenarios</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">~72%</div>
+        <div class="metric-lab">Optimal Approval Rate</div>
+      </div>
+    </div>
+    <div class="card-tags">
+      <span class="tag">Logistic Regression</span>
+      <span class="tag">Decision Tree</span>
+      <span class="tag">Random Forest</span>
+      <span class="tag">Probability Calibration</span>
+      <span class="tag">Fair Lending</span>
+      <span class="tag">SQL CTEs</span>
+      <span class="tag">Portfolio Monitoring</span>
+    </div>
+  </a>
+
+  <!-- Project 2 -->
+  <a class="project-card" href="./checkout-conversion-funnel/">
+    <div class="card-top">
+      <div>
+        <div class="card-domain">BNPL · POS Analytics · Unit Economics</div>
+        <div class="card-title">Checkout Conversion Funnel & Approval Rate Analysis</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </div>
+    <p class="card-desc">
+      End-to-end analysis of a simulated BNPL checkout funnel across 50K sessions —
+      identifying drop-off points, benchmarking by merchant vertical and risk tier,
+      and quantifying the <strong>unit economics impact of approval policy changes</strong>.
+      Sensitivity analysis shows exactly how a 1–15pp shift in approval rate
+      moves portfolio margin and default volume.
+    </p>
+    <div class="card-metrics">
+      <div class="metric">
+        <div class="metric-val">50K</div>
+        <div class="metric-lab">Simulated Sessions</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">6</div>
+        <div class="metric-lab">Funnel Stages</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">−13pp</div>
+        <div class="metric-lab">Biggest Drop-off</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">3</div>
+        <div class="metric-lab">Risk Tiers Analyzed</div>
+      </div>
+    </div>
+    <div class="card-tags">
+      <span class="tag">Funnel Analysis</span>
+      <span class="tag">Unit Economics</span>
+      <span class="tag">Approval Rate Sensitivity</span>
+      <span class="tag">Merchant Benchmarking</span>
+      <span class="tag">SQL CTEs</span>
+      <span class="tag">Synthetic Data</span>
+      <span class="tag">BNPL · POS</span>
+    </div>
+  </a>
+
+</div>
+
+<!-- ABOUT -->
+<div class="about">
+  <div class="about-inner">
+
+    <div>
+      <div class="about-section-label">Background</div>
+
+      <div class="about-item">
+        <div class="about-item-title">Research Analyst · Imagine Learning</div>
+        <div class="about-item-sub">May 2023 – Nov 2025 · End-to-end experimentation, portfolio KPI monitoring, Snowflake pipelines, Power BI dashboards</div>
+      </div>
+
+      <div class="about-item">
+        <div class="about-item-title">Data Scientist & Researcher · UC Irvine</div>
+        <div class="about-item-sub">
+          ML classification model on clickstream data · Causal inference on platform policy changes ·
+          <a href="https://escholarship.org/uc/item/2nc3h7pf" target="_blank">Dissertation →</a>
+        </div>
+      </div>
+
+      <div class="about-item">
+        <div class="about-item-title">Digital Transformation Consultant · IBM</div>
+        <div class="about-item-sub">Fintech client · Customer financial activity analysis · New product opportunity identification</div>
+      </div>
+
+      <div class="about-item">
+        <div class="about-item-title">MBA Instructor · Machine Learning for Business Analytics</div>
+        <div class="about-item-sub">UC Irvine · Capstone: credit default prediction using logistic regression, decision trees, random forest</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="about-section-label">Education</div>
+      <div class="about-item">
+        <div class="about-item-title">Ph.D. · Business (Economics of Information Systems)</div>
+        <div class="about-item-sub">University of California, Irvine</div>
+      </div>
+      <div class="about-item">
+        <div class="about-item-title">M.S. · Industrial & Operations Engineering</div>
+        <div class="about-item-sub">University of Michigan, Ann Arbor · Fulbright Scholar</div>
+      </div>
+      <div class="about-item">
+        <div class="about-item-title">M.S. · Electrical Engineering</div>
+        <div class="about-item-sub">Keio University, Japan · Keio Scholar</div>
+      </div>
+      <div class="about-item">
+        <div class="about-item-title">B.Eng. · Electrical Engineering</div>
+        <div class="about-item-sub">Thammasat University, Thailand · First Class Honors, Gold Medalist</div>
+      </div>
+
+      <div class="about-section-label" style="margin-top:1.5rem;">Technical Skills</div>
+      <div class="skills-row">
+        <span class="skill-tag">SQL</span>
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">R</span>
+        <span class="skill-tag">scikit-learn</span>
+        <span class="skill-tag">pandas</span>
+        <span class="skill-tag">Snowflake</span>
+        <span class="skill-tag">AWS</span>
+        <span class="skill-tag">Looker</span>
+        <span class="skill-tag">Power BI</span>
+        <span class="skill-tag">Tableau</span>
+        <span class="skill-tag">Claude Code</span>
+        <span class="skill-tag">Cursor</span>
+        <span class="skill-tag">Copilot</span>
+        <span class="skill-tag">Gemini</span>
+        <span class="skill-tag">GitHub</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <p>Anwida Prompijit · anwida@gmail.com</p>
+  <a href="https://github.com/ap-thinks" target="_blank">GitHub →</a>
+</footer>
+
+</body>
+</html>
