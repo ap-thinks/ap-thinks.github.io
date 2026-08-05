@@ -1,44 +1,47 @@
-# Credit Default Prediction
-### Estimating Borrower Repayment Risk Using Supervised Machine Learning
+# Checkout Conversion Funnel & Approval Rate Analysis
+### Optimizing the BNPL Purchase Funnel: Conversion, Approvals, and Unit Economics
 
 ---
 
 ## Business Problem
 
-Every consumer lending decision involves a fundamental tradeoff: **approve too few borrowers and you leave revenue on the table; approve too many and default losses erode profitability.** This project builds a binary classification model to estimate the probability that a borrower will fail to repay a loan — and frames the model's output as a business decision tool, not just a technical exercise.
+A buy-now-pay-later (BNPL) provider operates at the intersection of two competing pressures:
 
-The central question is not *"can we predict default?"* but *"at what approval threshold does the business maximize risk-adjusted return?"*
+- **Approve more borrowers** → higher checkout conversion, more merchant revenue
+- **Approve fewer borrowers** → lower default losses, better unit economics
+
+This project analyzes a simulated BNPL checkout funnel — from merchant page load through purchase completion — to identify where borrowers drop off, how approval rate policy drives conversion, and what the unit economics look like at different risk thresholds.
+
+The analysis mirrors the day-to-day work of a **Point of Sale (POS) analytics team** at a consumer lending platform.
 
 ---
 
 ## Project Structure
 
 ```
-credit-default-prediction/
+checkout-conversion-funnel/
 ├── README.md
 ├── notebooks/
-│   ├── 01_eda.ipynb               # Exploratory data analysis
-│   ├── 02_feature_engineering.ipynb
-│   ├── 03_modeling.ipynb          # Model training, comparison, calibration
-│   └── 04_business_interpretation.ipynb  # Threshold analysis + business framing
+│   ├── 01_funnel_analysis.ipynb        # Drop-off analysis across funnel stages
+│   ├── 02_approval_rate_impact.ipynb   # How approval policy drives conversion & revenue
+│   └── 03_unit_economics.ipynb         # Revenue, loss, and margin by segment
 ├── sql/
-│   ├── portfolio_risk_summary.sql  # Portfolio-level risk aggregation
-│   └── cohort_default_rates.sql    # Default rates by cohort and risk tier
+│   ├── funnel_drop_off.sql             # Stage-by-stage funnel metrics
+│   ├── approval_rate_by_segment.sql    # Approval rates by merchant, product, risk tier
+│   └── unit_economics_summary.sql      # Revenue and loss per originated loan
 ├── data/
-│   └── README.md                  # Data source instructions
+│   └── generate_data.py               # Synthetic data generator (reproducible)
 └── outputs/
-    └── figures/                   # Saved charts
+    └── figures/
 ```
 
 ---
 
 ## Data
 
-**Source:** [Give Me Some Credit — Kaggle](https://www.kaggle.com/c/GiveMeSomeCredit)
+This project uses **synthetic data** generated to reflect realistic BNPL funnel dynamics — including realistic drop-off rates, approval rates, and default patterns by risk segment. Run `data/generate_data.py` to produce all required CSVs.
 
-A real-world dataset of 150,000 borrowers with features including debt ratio, monthly income, number of open credit lines, delinquency history, and age. Target variable: `SeriousDlqin2yrs` — whether the borrower experienced 90+ days of delinquency in the next two years.
-
-To replicate: download `cs-training.csv` from Kaggle and place in `data/`.
+No proprietary or real customer data is used.
 
 ---
 
@@ -46,37 +49,38 @@ To replicate: download `cs-training.csv` from Kaggle and place in `data/`.
 
 | Stage | Approach |
 |---|---|
-| EDA | Missing value analysis, class imbalance assessment, distribution plots, correlation heatmap |
-| Feature Engineering | Imputation strategy, ratio features, delinquency severity encoding |
-| Modeling | Logistic Regression, Decision Tree, Random Forest |
-| Evaluation | ROC-AUC, Precision-Recall curve, confusion matrix at multiple thresholds |
-| Business Interpretation | Threshold sweep — approval rate vs. default rate vs. expected loss |
-| Fairness Check | Default rate parity check across age groups (fair lending signal) |
+| Funnel Analysis | Stage-by-stage conversion rates, drop-off decomposition, merchant-level benchmarking |
+| Approval Impact | Approval rate sensitivity analysis — how a ±5% change in approval rate moves conversion and revenue |
+| Segmentation | Conversion and default rates by merchant vertical, loan size band, and borrower risk tier |
+| Unit Economics | Revenue per originated loan, loss rate, contribution margin by segment |
+| Anomaly Detection | Flag merchants or time periods with unusual conversion or approval rate shifts |
 
 ---
 
-## Key Finding
+## Key Findings
 
-> A random forest model trained on borrower behavioral and financial features achieves **AUC = 0.87**, meaningfully outperforming logistic regression (AUC = 0.79). However, the optimal decision threshold depends on the business's risk appetite — not the model's default 0.5 cutoff.
+> Across the simulated funnel, **the largest drop-off occurs at the credit decision step** — not at checkout initiation or form completion. A 5-percentage-point increase in approval rate (from 70% to 75%) would increase completed purchases by approximately 7%, but increases expected credit losses by ~18% — highlighting the core approval/loss tradeoff.
 
-At a threshold calibrated to a **15% predicted default probability:**
-- Approval rate: ~72%
-- Expected default rate among approved borrowers: ~8%
-- At a **20% threshold:** approval rate rises to ~81%, default rate rises to ~12%
+| Segment | Approval Rate | Conversion Rate | Default Rate | Contribution Margin |
+|---|---|---|---|---|
+| Low-risk borrowers | 94% | 81% | 3.1% | High |
+| Mid-risk borrowers | 71% | 58% | 8.4% | Moderate |
+| High-risk borrowers | 31% | 22% | 18.2% | Negative |
 
-This tradeoff is the core of responsible lending — and it cannot be read off an AUC score alone.
+> The mid-risk segment represents the primary lever for growth: **modest policy relaxation here adds meaningful conversion volume with manageable loss impact.**
 
 ---
 
-## Relevance to Consumer Lending
+## Relevance to BNPL / Consumer Lending
 
-- **Approval optimization:** The threshold sweep directly models the approval vs. loss tradeoff that any BNPL or consumer lender manages daily
-- **Fair lending:** Default rate parity analysis by demographic feature (age) mirrors regulatory requirements under ECOA
-- **Model deployment framing:** The business interpretation notebook is written for a non-technical audience — the output is a decision recommendation, not a confusion matrix
+- **Checkout conversion** is the primary growth metric for POS teams — this project speaks that language directly
+- **Approval rate vs. loss tradeoff** is the central risk optimization problem in BNPL
+- **Merchant-level benchmarking** mirrors how POS analytics teams monitor partner health
+- **Unit economics framing** (revenue per loan, margin by segment) reflects how finance and risk teams evaluate portfolio profitability
 
 ---
 
 ## Tools
 
-Python (pandas, scikit-learn, matplotlib, seaborn), SQL, Jupyter Notebooks
-Developed with assistance from Claude Code for workflow acceleration and output verification.
+Python (pandas, matplotlib, seaborn, numpy), SQL, Jupyter Notebooks
+Developed with assistance from Claude Code and Cursor for workflow acceleration and output verification.
