@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Credit Default Prediction — Anwida Prompijit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:      #0D1B2A;
+      --navy-card: #132236;
+      --navy-mid:  #1A3A52;
+      --teal:      #4A8FE7;
+      --teal-dim:  rgba(74,143,231,0.12);
+      --teal-glow: rgba(74,143,231,0.25);
+      --white:     #F0F4F8;
+      --slate:     #8899AA;
+      --red-soft:  #FF6B6B;
+      --amber:     #F6C90E;
+      --mono:      'JetBrains Mono', monospace;
+      --sans:      'Inter', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,27,42,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(74,143,231,0.15);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 56px;
+    }
+    .nav-brand {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--teal);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a {
+      font-size: 0.8rem; font-weight: 500;
+      color: var(--slate); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--teal); }
+
+    /* ── HERO ───────────────────────────────── */
+    .hero {
+      padding: 5rem 2rem 3rem;
+      max-width: 900px; margin: 0 auto;
+    }
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--teal);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .hero-tag::before {
+      content: '';
+      display: inline-block;
+      width: 24px; height: 1px;
+      background: var(--teal);
+    }
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+    h1 span { color: var(--teal); }
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--slate);
+      margin: 1rem 0 2rem;
+      max-width: 620px;
+    }
+
+    /* ── AUC SIGNATURE ELEMENT ──────────────── */
+    .auc-display {
+      display: flex; gap: 2rem; flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+    .auc-card {
+      background: var(--navy-card);
+      border: 1px solid rgba(74,143,231,0.2);
+      border-radius: 8px;
+      padding: 1.2rem 1.6rem;
+      flex: 1; min-width: 160px;
+    }
+    .auc-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--slate);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+    .auc-value {
+      font-family: var(--mono);
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--teal);
+      line-height: 1;
+    }
+    .auc-value.dim { color: var(--slate); font-size: 1.5rem; }
+    .auc-note {
+      font-size: 0.72rem;
+      color: var(--slate);
+      margin-top: 0.3rem;
+    }
+
+    /* ── ROC CURVE (SVG ANIMATION) ──────────── */
+    .roc-section {
+      max-width: 900px; margin: 0 auto;
+      padding: 0 2rem 1rem;
+    }
+    .roc-wrap {
+      background: var(--navy-card);
+      border: 1px solid rgba(74,143,231,0.15);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .roc-title {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--slate);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .roc-svg-wrap { position: relative; }
+    .roc-svg-wrap svg { width: 100%; height: auto; display: block; }
+
+    /* ── SECTIONS ───────────────────────────── */
+    section {
+      max-width: 900px; margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    h2::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(74,143,231,0.15);
+    }
+
+    /* ── PROBLEM ────────────────────────────── */
+    .problem-box {
+      background: var(--teal-dim);
+      border-left: 3px solid var(--teal);
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+    .question {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      color: var(--teal);
+      margin-top: 1rem;
+      padding: 0.8rem 1rem;
+      background: rgba(74,143,231,0.06);
+      border-radius: 6px;
+    }
+
+    /* ── THRESHOLD TABLE ────────────────────── */
+    .threshold-section {
+      background: var(--navy-card);
+      border: 1px solid rgba(74,143,231,0.15);
+      border-radius: 12px;
+      padding: 1.8rem;
+      margin: 1.5rem 0;
+    }
+    .threshold-title {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--teal);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 0.82rem;
+    }
+    thead tr {
+      border-bottom: 1px solid rgba(74,143,231,0.2);
+    }
+    th {
+      color: var(--slate);
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 0.68rem;
+      letter-spacing: 0.07em;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+    }
+    td {
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: var(--white);
+    }
+    tr:last-child td { border-bottom: none; }
+    td.teal { color: var(--teal); font-weight: 600; }
+    td.amber { color: var(--amber); }
+    td.red { color: var(--red-soft); }
+    .row-highlight td { background: rgba(74,143,231,0.06); }
+
+    /* ── METHODS GRID ───────────────────────── */
+    .methods-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .method-card {
+      background: var(--navy-card);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      transition: border-color 0.2s;
+    }
+    .method-card:hover { border-color: rgba(74,143,231,0.3); }
+    .method-stage {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--teal);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    .method-desc {
+      font-size: 0.82rem;
+      color: var(--slate);
+      line-height: 1.5;
+    }
+
+    /* ── SQL PANEL ──────────────────────────── */
+    .sql-panel {
+      background: #0A1520;
+      border: 1px solid rgba(74,143,231,0.12);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+    .sql-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.6rem 1rem;
+      background: rgba(74,143,231,0.06);
+      border-bottom: 1px solid rgba(0,194,178,0.1);
+    }
+    .sql-filename {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--teal);
+    }
+    .sql-dots { display: flex; gap: 5px; }
+    .sql-dots span {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+    }
+    pre {
+      margin: 0;
+      padding: 1.2rem 1.2rem;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      line-height: 1.7;
+      color: #A8C1D4;
+    }
+    .kw  { color: #569CD6; }
+    .fn  { color: #DCDCAA; }
+    .cm  { color: #4A6274; font-style: italic; }
+    .str { color: #CE9178; }
+    .num { color: #B5CEA8; }
+    .tl  { color: #4A8FE7; }
+
+    /* ── FAIR LENDING ───────────────────────── */
+    .fair-lending {
+      background: var(--navy-card);
+      border: 1px solid rgba(246,201,14,0.2);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .fair-tag {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--amber);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+    .fair-lending p { font-size: 0.88rem; color: var(--slate); line-height: 1.6; }
+
+    /* ── TOOLS ──────────────────────────────── */
+    .tools-row {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      margin-top: 0.8rem;
+    }
+    .tool-tag {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      background: var(--teal-dim);
+      color: var(--teal);
+      border: 1px solid rgba(74,143,231,0.25);
+      border-radius: 4px;
+      padding: 0.25rem 0.6rem;
+    }
+
+    /* ── FOOTER ─────────────────────────────── */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+      max-width: 900px; margin: 0 auto;
+    }
+    footer p {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--slate);
+    }
+    .footer-links { display: flex; gap: 1rem; }
+    .footer-links a {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--teal);
+      text-decoration: none;
+    }
+    .footer-links a:hover { text-decoration: underline; }
+
+    /* ── DIVIDER ────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      margin: 0;
+    }
+
+    @media (max-width: 600px) {
+      .auc-display { flex-direction: column; }
+      .methods-grid { grid-template-columns: 1fr; }
+      nav { padding: 0 1rem; }
+      .hero, section { padding-left: 1rem; padding-right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="https://ap-thinks.github.io/">ap-thinks.github.io</a>
+  <div class="nav-links">
+    <a href="https://ap-thinks.github.io/">← Portfolio</a>
+    <a href="#methods">Methods</a>
+    <a href="#findings">Findings</a>
+    <a href="#sql">SQL</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Credit Risk · Machine Learning · Consumer Lending</div>
+  <h1>Credit <span>Default</span><br>Prediction</h1>
+  <p class="hero-sub">
+    Estimating borrower repayment risk using supervised machine learning —
+    and framing the model output as a business approval-threshold decision,
+    not just an AUC score.
+  </p>
+
+  <div class="auc-display">
+    <div class="auc-card">
+      <div class="auc-label">Random Forest AUC</div>
+      <div class="auc-value" id="auc-rf">—</div>
+      <div class="auc-note">vs. 0.79 logistic regression</div>
+    </div>
+    <div class="auc-card">
+      <div class="auc-label">Borrower Records</div>
+      <div class="auc-value" id="auc-n">—</div>
+      <div class="auc-note">Give Me Some Credit · Kaggle</div>
+    </div>
+    <div class="auc-card">
+      <div class="auc-label">Base Default Rate</div>
+      <div class="auc-value" id="auc-base">—</div>
+      <div class="auc-note">Significant class imbalance</div>
+    </div>
+    <div class="auc-card">
+      <div class="auc-label">Features Built</div>
+      <div class="auc-value" id="auc-feat">—</div>
+      <div class="auc-note">Incl. 4 engineered features</div>
+    </div>
+  </div>
+</div>
+
+<!-- ROC CURVE -->
+<div class="roc-section">
+  <div class="roc-wrap">
+    <div class="roc-title">ROC Curve — Model Comparison (animated on load)</div>
+    <div class="roc-svg-wrap">
+      <svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+        <!-- Grid -->
+        <rect x="60" y="20" width="460" height="260" fill="none"/>
+        <line x1="60" y1="280" x2="520" y2="280" stroke="#1A3A52" stroke-width="1"/>
+        <line x1="60" y1="20"  x2="60"  y2="280" stroke="#1A3A52" stroke-width="1"/>
+        <!-- Grid lines -->
+        <line x1="60" y1="215" x2="520" y2="215" stroke="#132236" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="60" y1="150" x2="520" y2="150" stroke="#132236" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="60" y1="85"  x2="520" y2="85"  stroke="#132236" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="175" y1="20" x2="175" y2="280" stroke="#132236" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="290" y1="20" x2="290" y2="280" stroke="#132236" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="405" y1="20" x2="405" y2="280" stroke="#132236" stroke-width="1" stroke-dasharray="4,4"/>
+        <!-- Diagonal reference -->
+        <line x1="60" y1="280" x2="520" y2="20" stroke="#4A5568" stroke-width="1" stroke-dasharray="6,4"/>
+        <!-- Axis labels -->
+        <text x="290" y="310" text-anchor="middle" fill="#8899AA" font-family="JetBrains Mono" font-size="11">False Positive Rate</text>
+        <text x="20" y="150" text-anchor="middle" fill="#8899AA" font-family="JetBrains Mono" font-size="11" transform="rotate(-90,20,150)">True Positive Rate</text>
+        <!-- Tick labels -->
+        <text x="55"  y="285" text-anchor="end" fill="#4A5568" font-family="JetBrains Mono" font-size="9">0</text>
+        <text x="55"  y="220" text-anchor="end" fill="#4A5568" font-family="JetBrains Mono" font-size="9">.25</text>
+        <text x="55"  y="155" text-anchor="end" fill="#4A5568" font-family="JetBrains Mono" font-size="9">.50</text>
+        <text x="55"  y="90"  text-anchor="end" fill="#4A5568" font-family="JetBrains Mono" font-size="9">.75</text>
+        <text x="55"  y="28"  text-anchor="end" fill="#4A5568" font-family="JetBrains Mono" font-size="9">1.0</text>
+        <text x="60"  y="295" text-anchor="middle" fill="#4A5568" font-family="JetBrains Mono" font-size="9">0</text>
+        <text x="175" y="295" text-anchor="middle" fill="#4A5568" font-family="JetBrains Mono" font-size="9">.25</text>
+        <text x="290" y="295" text-anchor="middle" fill="#4A5568" font-family="JetBrains Mono" font-size="9">.50</text>
+        <text x="405" y="295" text-anchor="middle" fill="#4A5568" font-family="JetBrains Mono" font-size="9">.75</text>
+        <text x="520" y="295" text-anchor="middle" fill="#4A5568" font-family="JetBrains Mono" font-size="9">1.0</text>
+
+        <!-- Logistic Regression curve AUC ~0.79 -->
+        <path id="lr-curve"
+          d="M60,280 C100,210 130,165 175,115 C220,68 270,40 340,32 C400,26 460,23 520,20"
+          fill="none" stroke="#4A90D9" stroke-width="2" stroke-dasharray="1000" stroke-dashoffset="1000">
+          <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="1.4s" begin="0.3s" fill="freeze" calcMode="spline" keySplines="0.4 0 0.2 1"/>
+        </path>
+
+        <!-- Decision Tree curve AUC ~0.82 -->
+        <path id="dt-curve"
+          d="M60,280 C90,195 120,148 165,100 C210,55 265,35 330,28 C390,23 450,21 520,20"
+          fill="none" stroke="#F6C90E" stroke-width="2" stroke-dasharray="1000" stroke-dashoffset="1000">
+          <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="1.4s" begin="0.6s" fill="freeze" calcMode="spline" keySplines="0.4 0 0.2 1"/>
+        </path>
+
+        <!-- Random Forest curve AUC ~0.87 -->
+        <path id="rf-curve"
+          d="M60,280 C80,175 110,125 155,82 C195,44 255,30 320,25 C380,21 440,20 520,20"
+          fill="none" stroke="#4A8FE7" stroke-width="2.5" stroke-dasharray="1000" stroke-dashoffset="1000">
+          <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="1.4s" begin="0.9s" fill="freeze" calcMode="spline" keySplines="0.4 0 0.2 1"/>
+        </path>
+
+        <!-- Legend -->
+        <rect x="280" y="140" width="228" height="82" rx="5" fill="#0A1520" stroke="rgba(74,143,231,0.12)"/>
+        <line x1="292" y1="158" x2="316" y2="158" stroke="#4A8FE7" stroke-width="2.5"/>
+        <text x="322" y="162" fill="#F0F4F8" font-family="JetBrains Mono" font-size="10">Random Forest   AUC=0.87</text>
+        <line x1="292" y1="178" x2="316" y2="178" stroke="#F6C90E" stroke-width="2"/>
+        <text x="322" y="182" fill="#F0F4F8" font-family="JetBrains Mono" font-size="10">Decision Tree    AUC=0.82</text>
+        <line x1="292" y1="198" x2="316" y2="198" stroke="#4A90D9" stroke-width="2"/>
+        <text x="322" y="202" fill="#F0F4F8" font-family="JetBrains Mono" font-size="10">Logistic Reg.    AUC=0.79</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<hr class="divider"/>
+
+<!-- BUSINESS PROBLEM -->
+<section id="problem">
+  <h2>Business Problem</h2>
+  <div class="problem-box">
+    Every consumer lending decision involves a fundamental tradeoff: <strong>approve too few borrowers and you leave revenue on the table; approve too many and default losses erode profitability.</strong>
+    This project builds a binary classification model to estimate the probability that a borrower will fail to repay — and frames the output as a business decision tool, not just a technical exercise.
+  </div>
+  <div class="question">
+    The central question is not "can we predict default?" but<br>
+    <strong>"at what approval threshold does the business maximize risk-adjusted return?"</strong>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- METHODS -->
+<section id="methods">
+  <h2>Methods</h2>
+  <div class="methods-grid">
+    <div class="method-card">
+      <div class="method-stage">EDA</div>
+      <div class="method-desc">Class imbalance analysis, missing value strategy, distribution plots, default rate by age group</div>
+    </div>
+    <div class="method-card">
+      <div class="method-stage">Feature Engineering</div>
+      <div class="method-desc">Age-group imputation for income, delinquency severity score, debt-per-credit-line, income-to-debt ratio</div>
+    </div>
+    <div class="method-card">
+      <div class="method-stage">Modeling</div>
+      <div class="method-desc">Logistic Regression, Decision Tree, Random Forest with class-weight balancing and probability calibration</div>
+    </div>
+    <div class="method-card">
+      <div class="method-stage">Evaluation</div>
+      <div class="method-desc">ROC-AUC, Precision-Recall curve, calibration curve — not accuracy (misleading for imbalanced data)</div>
+    </div>
+    <div class="method-card">
+      <div class="method-stage">Business Threshold</div>
+      <div class="method-desc">Sweep across decision thresholds — approval rate vs. default rate vs. expected net value per scenario</div>
+    </div>
+    <div class="method-card">
+      <div class="method-stage">Fair Lending</div>
+      <div class="method-desc">Default rate parity and approval rate disparity by age group — proxy for ECOA compliance review</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- KEY FINDINGS -->
+<section id="findings">
+  <h2>Key Findings</h2>
+  <div class="threshold-section">
+    <div class="threshold-title">Risk Appetite Scenario Comparison — Threshold Decision Table</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Scenario</th>
+          <th>Threshold</th>
+          <th>Approval Rate</th>
+          <th>Default Rate (Approved)</th>
+          <th>Est. Net Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Conservative</td>
+          <td class="teal">p ≤ 10%</td>
+          <td>~58%</td>
+          <td class="teal">~4.5%</td>
+          <td>Lower</td>
+        </tr>
+        <tr class="row-highlight">
+          <td><strong>Moderate ★</strong></td>
+          <td class="teal">p ≤ 15%</td>
+          <td><strong>~72%</strong></td>
+          <td class="amber">~8.0%</td>
+          <td class="teal"><strong>Optimal</strong></td>
+        </tr>
+        <tr>
+          <td>Growth</td>
+          <td class="teal">p ≤ 20%</td>
+          <td>~81%</td>
+          <td class="red">~12.0%</td>
+          <td>Declining margin</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.78rem; color:var(--slate); margin-top:1rem; font-family:var(--mono);">
+      ★ Optimal threshold determined by risk appetite, not model default cutoff (0.5).
+      Net value uses avg loan $1,500 · 40% recovery · 8% NIM on performing loans.
+    </p>
+  </div>
+
+  <div class="fair-lending">
+    <div class="fair-tag">⚖ Fair Lending Analysis</div>
+    <p>
+      Default rate parity and approval rate were computed across age groups at each threshold.
+      Groups with approval rates more than 10pp below the mean are flagged for regulatory review —
+      mirroring ECOA compliance monitoring in production consumer lending systems.
+    </p>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- SQL -->
+<section id="sql">
+  <h2>SQL</h2>
+  <p style="color:var(--slate); font-size:0.88rem; margin-bottom:1.2rem;">
+    Production-quality queries written to mirror how an R&amp;A team monitors a live lending portfolio.
+  </p>
+
+  <div class="sql-panel">
+    <div class="sql-header">
+      <div class="sql-dots"><span></span><span></span><span></span></div>
+      <div class="sql-filename">portfolio_risk_summary.sql</div>
+    </div>
+    <pre><span class="cm">-- Aggregate borrower risk metrics by tier to support portfolio monitoring</span>
+
+<span class="kw">WITH</span> <span class="tl">risk_tiers</span> <span class="kw">AS</span> (
+    <span class="kw">SELECT</span>
+        borrower_id,
+        predicted_default_proba,
+        actual_default,
+        loan_amount,
+        <span class="kw">CASE</span>
+            <span class="kw">WHEN</span> predicted_default_proba &lt; <span class="num">0.10</span> <span class="kw">THEN</span> <span class="str">'Tier 1 — Low Risk'</span>
+            <span class="kw">WHEN</span> predicted_default_proba &lt; <span class="num">0.15</span> <span class="kw">THEN</span> <span class="str">'Tier 2 — Moderate Risk'</span>
+            <span class="kw">WHEN</span> predicted_default_proba &lt; <span class="num">0.20</span> <span class="kw">THEN</span> <span class="str">'Tier 3 — Elevated Risk'</span>
+            <span class="kw">ELSE</span>                                    <span class="str">'Tier 4 — High Risk (Declined)'</span>
+        <span class="kw">END AS</span> risk_tier,
+        <span class="kw">CASE WHEN</span> predicted_default_proba &lt; <span class="num">0.15</span> <span class="kw">THEN</span> <span class="num">1</span> <span class="kw">ELSE</span> <span class="num">0</span> <span class="kw">END AS</span> approved
+    <span class="kw">FROM</span> borrower_predictions
+),
+
+<span class="tl">portfolio_summary</span> <span class="kw">AS</span> (
+    <span class="kw">SELECT</span>
+        risk_tier,
+        <span class="fn">COUNT</span>(*)                                        <span class="kw">AS</span> total_applicants,
+        <span class="fn">SUM</span>(approved)                                   <span class="kw">AS</span> approved_count,
+        <span class="fn">ROUND</span>(<span class="fn">AVG</span>(approved) * <span class="num">100</span>, <span class="num">1</span>)                   <span class="kw">AS</span> approval_rate_pct,
+        <span class="fn">ROUND</span>(<span class="fn">AVG</span>(<span class="kw">CASE WHEN</span> approved = <span class="num">1</span>
+                       <span class="kw">THEN</span> actual_default <span class="kw">END</span>) * <span class="num">100</span>, <span class="num">1</span>) <span class="kw">AS</span> default_rate_pct,
+        <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> approved = <span class="num">1</span>
+                 <span class="kw">THEN</span> loan_amount <span class="kw">END</span>)                  <span class="kw">AS</span> total_approved_volume
+    <span class="kw">FROM</span> risk_tiers
+    <span class="kw">GROUP BY</span> risk_tier
+)
+
+<span class="kw">SELECT</span> *, <span class="fn">ROUND</span>(estimated_loss_exposure / total_approved_volume * <span class="num">100</span>, <span class="num">1</span>) <span class="kw">AS</span> loss_rate_pct
+<span class="kw">FROM</span> <span class="tl">portfolio_summary</span>
+<span class="kw">ORDER BY</span> risk_tier;</pre>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- TOOLS -->
+<section id="tools">
+  <h2>Tools & Stack</h2>
+  <div class="tools-row">
+    <span class="tool-tag">Python</span>
+    <span class="tool-tag">scikit-learn</span>
+    <span class="tool-tag">pandas</span>
+    <span class="tool-tag">matplotlib</span>
+    <span class="tool-tag">seaborn</span>
+    <span class="tool-tag">SQL</span>
+    <span class="tool-tag">Jupyter Notebooks</span>
+    <span class="tool-tag">Claude Code</span>
+    <span class="tool-tag">Cursor</span>
+    <span class="tool-tag">GitHub</span>
+  </div>
+  <p style="font-size:0.8rem; color:var(--slate); margin-top:1rem;">
+    Data: <a href="https://www.kaggle.com/c/GiveMeSomeCredit" style="color:var(--teal);">Give Me Some Credit — Kaggle</a> (150K real borrower records)
+  </p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Anwida Prompijit · Ph.D. · anwida@gmail.com</p>
+  <div class="footer-links">
+    <a href="https://ap-thinks.github.io/">← All Projects</a>
+    <a href="https://github.com/ap-thinks/credit-default-prediction">GitHub Repo →</a>
+  </div>
+</footer>
+
+<script>
+  // Animate stat counters on load
+  function animateCount(id, target, decimals, suffix) {
+    const el = document.getElementById(id);
+    const duration = 1200;
+    const steps = 50;
+    const interval = duration / steps;
+    let current = 0;
+    const increment = target / steps;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) { current = target; clearInterval(timer); }
+      el.textContent = current.toFixed(decimals) + suffix;
+    }, interval);
+  }
+  window.addEventListener('load', () => {
+    setTimeout(() => animateCount('auc-rf',   0.87,  2, ''), 900);
+    setTimeout(() => animateCount('auc-n',    150,   0, 'K'), 900);
+    setTimeout(() => animateCount('auc-base', 6.7,   1, '%'), 900);
+    setTimeout(() => animateCount('auc-feat', 15,    0, ''), 900);
+  });
+</script>
+</body>
+</html>
