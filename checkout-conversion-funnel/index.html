@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Credit Default Prediction — Anwida Prompijit</title>
+  <title>Checkout Conversion Funnel — Anwida Prompijit</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -16,11 +16,11 @@
       --navy-mid:  #1A3A52;
       --teal:      #4A8FE7;
       --teal-dim:  rgba(74,143,231,0.12);
-      --teal-glow: rgba(74,143,231,0.25);
       --white:     #F0F4F8;
       --slate:     #8899AA;
       --red-soft:  #FF6B6B;
       --amber:     #F6C90E;
+      --green:     #56D364;
       --mono:      'JetBrains Mono', monospace;
       --sans:      'Inter', sans-serif;
     }
@@ -75,201 +75,184 @@
       display: flex; align-items: center; gap: 0.6rem;
     }
     .hero-tag::before {
-      content: '';
-      display: inline-block;
-      width: 24px; height: 1px;
-      background: var(--teal);
+      content: ''; display: inline-block;
+      width: 24px; height: 1px; background: var(--teal);
     }
     h1 {
       font-size: clamp(2rem, 5vw, 3.2rem);
-      font-weight: 700;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.5rem;
+      font-weight: 700; line-height: 1.1;
+      letter-spacing: -0.02em; margin-bottom: 0.5rem;
     }
     h1 span { color: var(--teal); }
     .hero-sub {
-      font-size: 1.05rem;
-      color: var(--slate);
-      margin: 1rem 0 2rem;
-      max-width: 620px;
+      font-size: 1.05rem; color: var(--slate);
+      margin: 1rem 0 2rem; max-width: 620px;
     }
 
-    /* ── AUC SIGNATURE ELEMENT ──────────────── */
-    .auc-display {
-      display: flex; gap: 2rem; flex-wrap: wrap;
-      margin: 2rem 0;
+    /* ── STAT CARDS ─────────────────────────── */
+    .stat-row {
+      display: flex; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0;
     }
-    .auc-card {
+    .stat-card {
       background: var(--navy-card);
       border: 1px solid rgba(74,143,231,0.2);
       border-radius: 8px;
-      padding: 1.2rem 1.6rem;
-      flex: 1; min-width: 160px;
+      padding: 1rem 1.4rem;
+      flex: 1; min-width: 140px;
     }
-    .auc-label {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      color: var(--slate);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 0.3rem;
+    .stat-label {
+      font-family: var(--mono); font-size: 0.65rem;
+      color: var(--slate); letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 0.3rem;
     }
-    .auc-value {
-      font-family: var(--mono);
-      font-size: 2rem;
-      font-weight: 600;
-      color: var(--teal);
-      line-height: 1;
+    .stat-value {
+      font-family: var(--mono); font-size: 1.8rem;
+      font-weight: 600; color: var(--teal); line-height: 1;
     }
-    .auc-value.dim { color: var(--slate); font-size: 1.5rem; }
-    .auc-note {
-      font-size: 0.72rem;
-      color: var(--slate);
-      margin-top: 0.3rem;
-    }
+    .stat-note { font-size: 0.7rem; color: var(--slate); margin-top: 0.3rem; }
 
-    /* ── ROC CURVE (SVG ANIMATION) ──────────── */
-    .roc-section {
-      max-width: 900px; margin: 0 auto;
-      padding: 0 2rem 1rem;
+    /* ── ANIMATED FUNNEL ────────────────────── */
+    .funnel-section {
+      max-width: 900px; margin: 0 auto; padding: 0 2rem 1rem;
     }
-    .roc-wrap {
+    .funnel-wrap {
       background: var(--navy-card);
       border: 1px solid rgba(74,143,231,0.15);
-      border-radius: 12px;
-      padding: 1.5rem;
+      border-radius: 12px; padding: 1.8rem;
     }
-    .roc-title {
-      font-family: var(--mono);
-      font-size: 0.72rem;
+    .funnel-title {
+      font-family: var(--mono); font-size: 0.72rem;
+      color: var(--slate); letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 1.4rem;
+    }
+    .funnel-bars { display: flex; flex-direction: column; gap: 0.55rem; }
+    .funnel-row {
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .funnel-label {
+      font-family: var(--mono); font-size: 0.72rem;
+      color: var(--slate); width: 140px; flex-shrink: 0;
+      text-align: right;
+    }
+    .funnel-bar-wrap {
+      flex: 1; background: rgba(255,255,255,0.04);
+      border-radius: 3px; height: 28px; overflow: hidden;
+    }
+    .funnel-bar {
+      height: 100%; border-radius: 3px;
+      display: flex; align-items: center; padding-left: 10px;
+      font-family: var(--mono); font-size: 0.72rem; font-weight: 600;
+      color: var(--navy); transition: width 1s cubic-bezier(0.4,0,0.2,1);
+    }
+    .funnel-bar.b1 { background: var(--teal);    width: 0%; }
+    .funnel-bar.b2 { background: #3A7FD7; width: 0%; }
+    .funnel-bar.b3 { background: #2A6FC7; width: 0%; }
+    .funnel-bar.b4 { background: #1A5FB7; width: 0%; }
+    .funnel-bar.b5 { background: #0A4FA7; width: 0%; }
+    .funnel-bar.b6 { background: #003F97; width: color: var(--white); width: 0%; }
+    .funnel-bar.b6 { background: #002F87; color: var(--white); width: 0%; }
+
+    .funnel-pct {
+      font-family: var(--mono); font-size: 0.72rem;
+      color: var(--slate); width: 44px; text-align: right; flex-shrink: 0;
+    }
+    .drop-badge {
+      font-family: var(--mono); font-size: 0.65rem;
+      background: rgba(255,107,107,0.15);
+      color: var(--red-soft);
+      border-radius: 3px; padding: 0.1rem 0.4rem;
+      width: 52px; text-align: center; flex-shrink: 0;
+    }
+    .drop-badge.ok {
+      background: rgba(86,211,100,0.1);
+      color: var(--green);
+    }
+    .funnel-note {
+      margin-top: 1rem;
+      font-family: var(--mono); font-size: 0.72rem;
       color: var(--slate);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 1rem;
     }
-    .roc-svg-wrap { position: relative; }
-    .roc-svg-wrap svg { width: 100%; height: auto; display: block; }
+    .funnel-note strong { color: var(--red-soft); }
 
     /* ── SECTIONS ───────────────────────────── */
-    section {
-      max-width: 900px; margin: 0 auto;
-      padding: 3rem 2rem;
-    }
+    section { max-width: 900px; margin: 0 auto; padding: 3rem 2rem; }
     h2 {
-      font-size: 1.3rem;
-      font-weight: 600;
-      margin-bottom: 1.2rem;
+      font-size: 1.3rem; font-weight: 600; margin-bottom: 1.2rem;
       display: flex; align-items: center; gap: 0.75rem;
     }
     h2::after {
-      content: '';
-      flex: 1;
-      height: 1px;
+      content: ''; flex: 1; height: 1px;
       background: rgba(74,143,231,0.15);
     }
 
-    /* ── PROBLEM ────────────────────────────── */
-    .problem-box {
+    /* ── TENSION BOX ────────────────────────── */
+    .tension {
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      gap: 0; margin: 1.5rem 0; align-items: stretch;
+    }
+    .tension-side {
+      background: var(--navy-card);
+      border: 1px solid rgba(74,143,231,0.12);
+      border-radius: 8px; padding: 1.2rem 1.4rem;
+    }
+    .tension-side.left { border-radius: 8px 0 0 8px; border-right: none; }
+    .tension-side.right { border-radius: 0 8px 8px 0; border-left: none; }
+    .tension-mid {
+      display: flex; align-items: center; justify-content: center;
       background: var(--teal-dim);
-      border-left: 3px solid var(--teal);
-      border-radius: 0 8px 8px 0;
-      padding: 1.2rem 1.5rem;
-      margin-bottom: 1.5rem;
-      font-size: 0.95rem;
-      line-height: 1.7;
+      border-top: 1px solid rgba(74,143,231,0.12);
+      border-bottom: 1px solid rgba(74,143,231,0.12);
+      padding: 0 0.8rem;
+      font-family: var(--mono); font-size: 1.1rem; color: var(--teal);
     }
-    .question {
-      font-family: var(--mono);
-      font-size: 0.9rem;
-      color: var(--teal);
-      margin-top: 1rem;
-      padding: 0.8rem 1rem;
-      background: rgba(74,143,231,0.06);
-      border-radius: 6px;
+    .tension-head {
+      font-family: var(--mono); font-size: 0.65rem;
+      color: var(--teal); letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 0.5rem;
     }
+    .tension-body { font-size: 0.85rem; color: var(--slate); line-height: 1.5; }
 
-    /* ── THRESHOLD TABLE ────────────────────── */
-    .threshold-section {
+    /* ── SEGMENT TABLE ──────────────────────── */
+    .seg-table-wrap {
       background: var(--navy-card);
       border: 1px solid rgba(74,143,231,0.15);
-      border-radius: 12px;
-      padding: 1.8rem;
-      margin: 1.5rem 0;
+      border-radius: 12px; padding: 1.6rem; margin: 1.5rem 0;
     }
-    .threshold-title {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--teal);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 1.2rem;
+    .seg-title {
+      font-family: var(--mono); font-size: 0.72rem;
+      color: var(--teal); letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 1.2rem;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-family: var(--mono);
-      font-size: 0.82rem;
-    }
-    thead tr {
-      border-bottom: 1px solid rgba(74,143,231,0.2);
-    }
+    table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 0.82rem; }
+    thead tr { border-bottom: 1px solid rgba(74,143,231,0.2); }
     th {
-      color: var(--slate);
-      font-weight: 500;
-      text-transform: uppercase;
-      font-size: 0.68rem;
-      letter-spacing: 0.07em;
-      padding: 0.5rem 0.75rem;
-      text-align: left;
+      color: var(--slate); font-weight: 500; text-transform: uppercase;
+      font-size: 0.68rem; letter-spacing: 0.07em;
+      padding: 0.5rem 0.75rem; text-align: left;
     }
-    td {
-      padding: 0.6rem 0.75rem;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-      color: var(--white);
-    }
+    td { padding: 0.65rem 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.04); }
     tr:last-child td { border-bottom: none; }
     td.teal { color: var(--teal); font-weight: 600; }
     td.amber { color: var(--amber); }
-    td.red { color: var(--red-soft); }
-    .row-highlight td { background: rgba(74,143,231,0.06); }
+    td.red   { color: var(--red-soft); }
+    td.green { color: var(--green); }
+    .row-hl td { background: rgba(74,143,231,0.05); }
 
-    /* ── METHODS GRID ───────────────────────── */
-    .methods-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-    .method-card {
-      background: var(--navy-card);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 8px;
-      padding: 1rem 1.2rem;
-      transition: border-color 0.2s;
-    }
-    .method-card:hover { border-color: rgba(74,143,231,0.3); }
-    .method-stage {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      color: var(--teal);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 0.4rem;
-    }
-    .method-desc {
-      font-size: 0.82rem;
-      color: var(--slate);
-      line-height: 1.5;
+    /* ── INSIGHT BOX ────────────────────────── */
+    .insight {
+      background: var(--teal-dim);
+      border-left: 3px solid var(--teal);
+      border-radius: 0 8px 8px 0;
+      padding: 1rem 1.3rem;
+      margin: 1.2rem 0;
+      font-size: 0.88rem; line-height: 1.7;
     }
 
     /* ── SQL PANEL ──────────────────────────── */
     .sql-panel {
       background: #0A1520;
       border: 1px solid rgba(74,143,231,0.12);
-      border-radius: 10px;
-      overflow: hidden;
-      margin: 1rem 0;
+      border-radius: 10px; overflow: hidden; margin: 1rem 0;
     }
     .sql-header {
       display: flex; align-items: center; justify-content: space-between;
@@ -277,23 +260,12 @@
       background: rgba(74,143,231,0.06);
       border-bottom: 1px solid rgba(0,194,178,0.1);
     }
-    .sql-filename {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--teal);
-    }
+    .sql-filename { font-family: var(--mono); font-size: 0.72rem; color: var(--teal); }
     .sql-dots { display: flex; gap: 5px; }
-    .sql-dots span {
-      width: 10px; height: 10px; border-radius: 50%;
-      background: rgba(255,255,255,0.1);
-    }
+    .sql-dots span { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.1); }
     pre {
-      margin: 0;
-      padding: 1.2rem 1.2rem;
-      overflow-x: auto;
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      line-height: 1.7;
+      margin: 0; padding: 1.2rem; overflow-x: auto;
+      font-family: var(--mono); font-size: 0.75rem; line-height: 1.75;
       color: #A8C1D4;
     }
     .kw  { color: #569CD6; }
@@ -303,71 +275,52 @@
     .num { color: #B5CEA8; }
     .tl  { color: #4A8FE7; }
 
-    /* ── FAIR LENDING ───────────────────────── */
-    .fair-lending {
+    /* ── METHODS ────────────────────────────── */
+    .methods-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+      gap: 1rem; margin-top: 1rem;
+    }
+    .method-card {
       background: var(--navy-card);
-      border: 1px solid rgba(246,201,14,0.2);
-      border-radius: 10px;
-      padding: 1.5rem;
-      margin: 1.5rem 0;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px; padding: 1rem 1.2rem;
+      transition: border-color 0.2s;
     }
-    .fair-tag {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      color: var(--amber);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 0.6rem;
+    .method-card:hover { border-color: rgba(74,143,231,0.3); }
+    .method-stage {
+      font-family: var(--mono); font-size: 0.65rem;
+      color: var(--teal); letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 0.4rem;
     }
-    .fair-lending p { font-size: 0.88rem; color: var(--slate); line-height: 1.6; }
+    .method-desc { font-size: 0.82rem; color: var(--slate); line-height: 1.5; }
 
     /* ── TOOLS ──────────────────────────────── */
-    .tools-row {
-      display: flex; flex-wrap: wrap; gap: 0.5rem;
-      margin-top: 0.8rem;
-    }
+    .tools-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem; }
     .tool-tag {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      background: var(--teal-dim);
-      color: var(--teal);
+      font-family: var(--mono); font-size: 0.72rem;
+      background: var(--teal-dim); color: var(--teal);
       border: 1px solid rgba(74,143,231,0.25);
-      border-radius: 4px;
-      padding: 0.25rem 0.6rem;
+      border-radius: 4px; padding: 0.25rem 0.6rem;
     }
 
     /* ── FOOTER ─────────────────────────────── */
+    .divider { border: none; border-top: 1px solid rgba(255,255,255,0.05); }
     footer {
-      border-top: 1px solid rgba(255,255,255,0.05);
-      padding: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.05); padding: 2rem;
       display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 1rem;
-      max-width: 900px; margin: 0 auto;
+      flex-wrap: wrap; gap: 1rem; max-width: 900px; margin: 0 auto;
     }
-    footer p {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--slate);
-    }
+    footer p { font-family: var(--mono); font-size: 0.72rem; color: var(--slate); }
     .footer-links { display: flex; gap: 1rem; }
-    .footer-links a {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--teal);
-      text-decoration: none;
-    }
+    .footer-links a { font-family: var(--mono); font-size: 0.72rem; color: var(--teal); text-decoration: none; }
     .footer-links a:hover { text-decoration: underline; }
 
-    /* ── DIVIDER ────────────────────────────── */
-    .divider {
-      border: none;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      margin: 0;
-    }
-
     @media (max-width: 600px) {
-      .auc-display { flex-direction: column; }
-      .methods-grid { grid-template-columns: 1fr; }
+      .stat-row { flex-direction: column; }
+      .tension { grid-template-columns: 1fr; }
+      .tension-side.left, .tension-side.right { border-radius: 8px; border: 1px solid rgba(74,143,231,0.12); }
+      .tension-mid { padding: 0.6rem; }
+      .funnel-label { width: 100px; font-size: 0.65rem; }
       nav { padding: 0 1rem; }
       .hero, section { padding-left: 1rem; padding-right: 1rem; }
     }
@@ -380,7 +333,7 @@
   <a class="nav-brand" href="https://ap-thinks.github.io/">ap-thinks.github.io</a>
   <div class="nav-links">
     <a href="https://ap-thinks.github.io/">← Portfolio</a>
-    <a href="#methods">Methods</a>
+    <a href="#funnel">Funnel</a>
     <a href="#findings">Findings</a>
     <a href="#sql">SQL</a>
   </div>
@@ -388,118 +341,181 @@
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-tag">Credit Risk · Machine Learning · Consumer Lending</div>
-  <h1>Credit <span>Default</span><br>Prediction</h1>
+  <div class="hero-tag">BNPL · POS Analytics · Unit Economics</div>
+  <h1>Checkout <span>Conversion</span><br>Funnel Analysis</h1>
   <p class="hero-sub">
-    Estimating borrower repayment risk using supervised machine learning —
-    and framing the model output as a business approval-threshold decision,
-    not just an AUC score.
+    Optimizing the BNPL purchase funnel — from merchant page load to completed purchase —
+    and quantifying the approval rate vs. default loss tradeoff at each risk threshold.
   </p>
 
-  <div class="auc-display">
-    <div class="auc-card">
-      <div class="auc-label">Random Forest AUC</div>
-      <div class="auc-value" id="auc-rf">—</div>
-      <div class="auc-note">vs. 0.79 logistic regression</div>
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-label">Sessions Simulated</div>
+      <div class="stat-value" id="s1">—</div>
+      <div class="stat-note">Reproducible synthetic data</div>
     </div>
-    <div class="auc-card">
-      <div class="auc-label">Borrower Records</div>
-      <div class="auc-value" id="auc-n">—</div>
-      <div class="auc-note">Give Me Some Credit · Kaggle</div>
+    <div class="stat-card">
+      <div class="stat-label">Funnel Stages</div>
+      <div class="stat-value" id="s2">—</div>
+      <div class="stat-note">Page load → purchase complete</div>
     </div>
-    <div class="auc-card">
-      <div class="auc-label">Base Default Rate</div>
-      <div class="auc-value" id="auc-base">—</div>
-      <div class="auc-note">Significant class imbalance</div>
+    <div class="stat-card">
+      <div class="stat-label">Biggest Drop-off</div>
+      <div class="stat-value" id="s3" style="color:var(--red-soft)">—</div>
+      <div class="stat-note">At credit decision step</div>
     </div>
-    <div class="auc-card">
-      <div class="auc-label">Features Built</div>
-      <div class="auc-value" id="auc-feat">—</div>
-      <div class="auc-note">Incl. 4 engineered features</div>
-    </div>
-  </div>
-</div>
-
-<!-- ROC CURVE -->
-<div class="roc-section">
-  <div class="roc-wrap">
-    <div class="roc-title">ROC Curve — Model Comparison (animated on load)</div>
-    <div class="roc-svg-wrap">
-      <svg viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
-        <!-- Grid -->
-        <rect x="60" y="20" width="460" height="260" fill="none"/>
-        <line x1="60" y1="280" x2="520" y2="280" stroke="#1A3A52" stroke-width="1"/>
-        <line x1="60" y1="20"  x2="60"  y2="280" stroke="#1A3A52" stroke-width="1"/>
-        <!-- Grid lines -->
-        <line x1="60" y1="215" x2="520" y2="215" stroke="#132236" stroke-width="1" stroke-dasharray="4,4"/>
-        <line x1="60" y1="150" x2="520" y2="150" stroke="#132236" stroke-width="1" stroke-dasharray="4,4"/>
-        <line x1="60" y1="85"  x2="520" y2="85"  stroke="#132236" stroke-width="1" stroke-dasharray="4,4"/>
-        <line x1="175" y1="20" x2="175" y2="280" stroke="#132236" stroke-width="1" stroke-dasharray="4,4"/>
-        <line x1="290" y1="20" x2="290" y2="280" stroke="#132236" stroke-width="1" stroke-dasharray="4,4"/>
-        <line x1="405" y1="20" x2="405" y2="280" stroke="#132236" stroke-width="1" stroke-dasharray="4,4"/>
-        <!-- Diagonal reference -->
-        <line x1="60" y1="280" x2="520" y2="20" stroke="#4A5568" stroke-width="1" stroke-dasharray="6,4"/>
-        <!-- Axis labels -->
-        <text x="290" y="310" text-anchor="middle" fill="#8899AA" font-family="JetBrains Mono" font-size="11">False Positive Rate</text>
-        <text x="20" y="150" text-anchor="middle" fill="#8899AA" font-family="JetBrains Mono" font-size="11" transform="rotate(-90,20,150)">True Positive Rate</text>
-        <!-- Tick labels -->
-        <text x="55"  y="285" text-anchor="end" fill="#4A5568" font-family="JetBrains Mono" font-size="9">0</text>
-        <text x="55"  y="220" text-anchor="end" fill="#4A5568" font-family="JetBrains Mono" font-size="9">.25</text>
-        <text x="55"  y="155" text-anchor="end" fill="#4A5568" font-family="JetBrains Mono" font-size="9">.50</text>
-        <text x="55"  y="90"  text-anchor="end" fill="#4A5568" font-family="JetBrains Mono" font-size="9">.75</text>
-        <text x="55"  y="28"  text-anchor="end" fill="#4A5568" font-family="JetBrains Mono" font-size="9">1.0</text>
-        <text x="60"  y="295" text-anchor="middle" fill="#4A5568" font-family="JetBrains Mono" font-size="9">0</text>
-        <text x="175" y="295" text-anchor="middle" fill="#4A5568" font-family="JetBrains Mono" font-size="9">.25</text>
-        <text x="290" y="295" text-anchor="middle" fill="#4A5568" font-family="JetBrains Mono" font-size="9">.50</text>
-        <text x="405" y="295" text-anchor="middle" fill="#4A5568" font-family="JetBrains Mono" font-size="9">.75</text>
-        <text x="520" y="295" text-anchor="middle" fill="#4A5568" font-family="JetBrains Mono" font-size="9">1.0</text>
-
-        <!-- Logistic Regression curve AUC ~0.79 -->
-        <path id="lr-curve"
-          d="M60,280 C100,210 130,165 175,115 C220,68 270,40 340,32 C400,26 460,23 520,20"
-          fill="none" stroke="#4A90D9" stroke-width="2" stroke-dasharray="1000" stroke-dashoffset="1000">
-          <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="1.4s" begin="0.3s" fill="freeze" calcMode="spline" keySplines="0.4 0 0.2 1"/>
-        </path>
-
-        <!-- Decision Tree curve AUC ~0.82 -->
-        <path id="dt-curve"
-          d="M60,280 C90,195 120,148 165,100 C210,55 265,35 330,28 C390,23 450,21 520,20"
-          fill="none" stroke="#F6C90E" stroke-width="2" stroke-dasharray="1000" stroke-dashoffset="1000">
-          <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="1.4s" begin="0.6s" fill="freeze" calcMode="spline" keySplines="0.4 0 0.2 1"/>
-        </path>
-
-        <!-- Random Forest curve AUC ~0.87 -->
-        <path id="rf-curve"
-          d="M60,280 C80,175 110,125 155,82 C195,44 255,30 320,25 C380,21 440,20 520,20"
-          fill="none" stroke="#4A8FE7" stroke-width="2.5" stroke-dasharray="1000" stroke-dashoffset="1000">
-          <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="1.4s" begin="0.9s" fill="freeze" calcMode="spline" keySplines="0.4 0 0.2 1"/>
-        </path>
-
-        <!-- Legend -->
-        <rect x="280" y="140" width="228" height="82" rx="5" fill="#0A1520" stroke="rgba(74,143,231,0.12)"/>
-        <line x1="292" y1="158" x2="316" y2="158" stroke="#4A8FE7" stroke-width="2.5"/>
-        <text x="322" y="162" fill="#F0F4F8" font-family="JetBrains Mono" font-size="10">Random Forest   AUC=0.87</text>
-        <line x1="292" y1="178" x2="316" y2="178" stroke="#F6C90E" stroke-width="2"/>
-        <text x="322" y="182" fill="#F0F4F8" font-family="JetBrains Mono" font-size="10">Decision Tree    AUC=0.82</text>
-        <line x1="292" y1="198" x2="316" y2="198" stroke="#4A90D9" stroke-width="2"/>
-        <text x="322" y="202" fill="#F0F4F8" font-family="JetBrains Mono" font-size="10">Logistic Reg.    AUC=0.79</text>
-      </svg>
+    <div class="stat-card">
+      <div class="stat-label">E2E Conversion</div>
+      <div class="stat-value" id="s4">—</div>
+      <div class="stat-note">Page load → purchase</div>
     </div>
   </div>
 </div>
 
-<hr class="divider"/>
+<!-- ANIMATED FUNNEL -->
+<div class="funnel-section" id="funnel">
+  <div class="funnel-wrap">
+    <div class="funnel-title">BNPL Checkout Funnel — Overall Conversion (animated on load)</div>
+    <div class="funnel-bars">
+
+      <div class="funnel-row">
+        <div class="funnel-label">Page Load</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar b1" id="fb1" data-target="100">100%</div>
+        </div>
+        <div class="funnel-pct">100%</div>
+        <div class="drop-badge ok">base</div>
+      </div>
+
+      <div class="funnel-row">
+        <div class="funnel-label">BNPL Click</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar b2" id="fb2" data-target="62">62%</div>
+        </div>
+        <div class="funnel-pct">62%</div>
+        <div class="drop-badge">−38%</div>
+      </div>
+
+      <div class="funnel-row">
+        <div class="funnel-label">Form Start</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar b3" id="fb3" data-target="50">50%</div>
+        </div>
+        <div class="funnel-pct">50%</div>
+        <div class="drop-badge ok">−12%</div>
+      </div>
+
+      <div class="funnel-row">
+        <div class="funnel-label">Form Complete</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar b4" id="fb4" data-target="44">44%</div>
+        </div>
+        <div class="funnel-pct">44%</div>
+        <div class="drop-badge ok">−6%</div>
+      </div>
+
+      <div class="funnel-row">
+        <div class="funnel-label" style="color:var(--red-soft)">Credit Approved</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar b5" id="fb5" data-target="31" style="background:var(--red-soft);">31%</div>
+        </div>
+        <div class="funnel-pct" style="color:var(--red-soft)">31%</div>
+        <div class="drop-badge">−13%</div>
+      </div>
+
+      <div class="funnel-row">
+        <div class="funnel-label">Purchase Complete</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar b6" id="fb6" data-target="28" style="background:#2A5FAA; color:var(--white);">28%</div>
+        </div>
+        <div class="funnel-pct">28%</div>
+        <div class="drop-badge ok">−3%</div>
+      </div>
+
+    </div>
+    <div class="funnel-note">
+      <strong>Largest drop-off: Credit decision step (−13pp)</strong> — not form abandonment.
+      This is the primary lever for conversion growth: approval rate optimization.
+    </div>
+  </div>
+</div>
+
+<hr class="divider" style="margin:1rem 0;"/>
 
 <!-- BUSINESS PROBLEM -->
 <section id="problem">
   <h2>Business Problem</h2>
-  <div class="problem-box">
-    Every consumer lending decision involves a fundamental tradeoff: <strong>approve too few borrowers and you leave revenue on the table; approve too many and default losses erode profitability.</strong>
-    This project builds a binary classification model to estimate the probability that a borrower will fail to repay — and frames the output as a business decision tool, not just a technical exercise.
+  <div class="tension">
+    <div class="tension-side left">
+      <div class="tension-head">Approve More →</div>
+      <div class="tension-body">Higher checkout conversion · More merchant revenue · Lower friction for borrowers</div>
+    </div>
+    <div class="tension-mid">⇌</div>
+    <div class="tension-side right">
+      <div class="tension-head">← Approve Fewer</div>
+      <div class="tension-body">Lower default losses · Better unit economics · Healthier portfolio risk profile</div>
+    </div>
   </div>
-  <div class="question">
-    The central question is not "can we predict default?" but<br>
-    <strong>"at what approval threshold does the business maximize risk-adjusted return?"</strong>
+  <div class="insight">
+    A 5-percentage-point increase in approval rate (70% → 75%) increases completed purchases
+    by approximately <strong>7%</strong>, but increases expected credit losses by approximately
+    <strong>18%</strong> — highlighting why the approval threshold is a business decision,
+    not just a model hyperparameter.
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- FINDINGS -->
+<section id="findings">
+  <h2>Key Findings</h2>
+
+  <div class="seg-table-wrap">
+    <div class="seg-title">Unit Economics by Risk Tier (Per Originated Loan)</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Segment</th>
+          <th>Approval Rate</th>
+          <th>Conversion Rate</th>
+          <th>Default Rate</th>
+          <th>Contribution Margin</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Low-risk borrowers</td>
+          <td class="teal">94%</td>
+          <td class="teal">81%</td>
+          <td class="green">3.1%</td>
+          <td class="teal">High</td>
+        </tr>
+        <tr class="row-hl">
+          <td><strong>Mid-risk borrowers ★</strong></td>
+          <td class="amber">71%</td>
+          <td class="amber">58%</td>
+          <td class="amber">8.4%</td>
+          <td class="amber">Moderate — primary growth lever</td>
+        </tr>
+        <tr>
+          <td>High-risk borrowers</td>
+          <td class="red">31%</td>
+          <td class="red">22%</td>
+          <td class="red">18.2%</td>
+          <td class="red">Negative</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-family:var(--mono); font-size:0.75rem; color:var(--slate); margin-top:1rem;">
+      ★ Mid-risk segment is the primary lever for responsible growth.
+      Modest approval rate relaxation here adds meaningful conversion volume with manageable loss impact.
+    </p>
+  </div>
+
+  <div class="insight">
+    The sensitivity analysis shows portfolio margin <strong>peaks at ~78% mid-risk approval rate</strong>,
+    after which incremental defaults outpace incremental revenue.
+    The optimal threshold is a function of the business's risk appetite — not the model's default 0.5 cutoff.
   </div>
 </section>
 
@@ -510,86 +526,29 @@
   <h2>Methods</h2>
   <div class="methods-grid">
     <div class="method-card">
-      <div class="method-stage">EDA</div>
-      <div class="method-desc">Class imbalance analysis, missing value strategy, distribution plots, default rate by age group</div>
+      <div class="method-stage">Funnel Analysis</div>
+      <div class="method-desc">Stage-by-stage conversion rates, drop-off decomposition, merchant-level benchmarking across verticals</div>
     </div>
     <div class="method-card">
-      <div class="method-stage">Feature Engineering</div>
-      <div class="method-desc">Age-group imputation for income, delinquency severity score, debt-per-credit-line, income-to-debt ratio</div>
+      <div class="method-stage">Approval Impact</div>
+      <div class="method-desc">Sensitivity analysis: how ±5pp change in approval rate moves checkout conversion and revenue</div>
     </div>
     <div class="method-card">
-      <div class="method-stage">Modeling</div>
-      <div class="method-desc">Logistic Regression, Decision Tree, Random Forest with class-weight balancing and probability calibration</div>
+      <div class="method-stage">Segmentation</div>
+      <div class="method-desc">Conversion and default rates by merchant vertical, loan size band, and borrower risk tier</div>
     </div>
     <div class="method-card">
-      <div class="method-stage">Evaluation</div>
-      <div class="method-desc">ROC-AUC, Precision-Recall curve, calibration curve — not accuracy (misleading for imbalanced data)</div>
+      <div class="method-stage">Unit Economics</div>
+      <div class="method-desc">Revenue per originated loan, loss rate, contribution margin — by segment and approval threshold</div>
     </div>
     <div class="method-card">
-      <div class="method-stage">Business Threshold</div>
-      <div class="method-desc">Sweep across decision thresholds — approval rate vs. default rate vs. expected net value per scenario</div>
+      <div class="method-stage">Anomaly Detection</div>
+      <div class="method-desc">Flag merchants with unusual conversion or approval rate shifts vs. cohort baseline</div>
     </div>
     <div class="method-card">
-      <div class="method-stage">Fair Lending</div>
-      <div class="method-desc">Default rate parity and approval rate disparity by age group — proxy for ECOA compliance review</div>
+      <div class="method-stage">Synthetic Data</div>
+      <div class="method-desc">Reproducible 50K-session simulator with realistic BNPL drop-off and risk-tier dynamics</div>
     </div>
-  </div>
-</section>
-
-<hr class="divider"/>
-
-<!-- KEY FINDINGS -->
-<section id="findings">
-  <h2>Key Findings</h2>
-  <div class="threshold-section">
-    <div class="threshold-title">Risk Appetite Scenario Comparison — Threshold Decision Table</div>
-    <table>
-      <thead>
-        <tr>
-          <th>Scenario</th>
-          <th>Threshold</th>
-          <th>Approval Rate</th>
-          <th>Default Rate (Approved)</th>
-          <th>Est. Net Value</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Conservative</td>
-          <td class="teal">p ≤ 10%</td>
-          <td>~58%</td>
-          <td class="teal">~4.5%</td>
-          <td>Lower</td>
-        </tr>
-        <tr class="row-highlight">
-          <td><strong>Moderate ★</strong></td>
-          <td class="teal">p ≤ 15%</td>
-          <td><strong>~72%</strong></td>
-          <td class="amber">~8.0%</td>
-          <td class="teal"><strong>Optimal</strong></td>
-        </tr>
-        <tr>
-          <td>Growth</td>
-          <td class="teal">p ≤ 20%</td>
-          <td>~81%</td>
-          <td class="red">~12.0%</td>
-          <td>Declining margin</td>
-        </tr>
-      </tbody>
-    </table>
-    <p style="font-size:0.78rem; color:var(--slate); margin-top:1rem; font-family:var(--mono);">
-      ★ Optimal threshold determined by risk appetite, not model default cutoff (0.5).
-      Net value uses avg loan $1,500 · 40% recovery · 8% NIM on performing loans.
-    </p>
-  </div>
-
-  <div class="fair-lending">
-    <div class="fair-tag">⚖ Fair Lending Analysis</div>
-    <p>
-      Default rate parity and approval rate were computed across age groups at each threshold.
-      Groups with approval rates more than 10pp below the mean are flagged for regulatory review —
-      mirroring ECOA compliance monitoring in production consumer lending systems.
-    </p>
   </div>
 </section>
 
@@ -599,63 +558,63 @@
 <section id="sql">
   <h2>SQL</h2>
   <p style="color:var(--slate); font-size:0.88rem; margin-bottom:1.2rem;">
-    Production-quality queries written to mirror how an R&amp;A team monitors a live lending portfolio.
+    Production-style CTEs for funnel drop-off and unit economics — the kind of queries a POS analytics team runs daily.
   </p>
 
   <div class="sql-panel">
     <div class="sql-header">
       <div class="sql-dots"><span></span><span></span><span></span></div>
-      <div class="sql-filename">portfolio_risk_summary.sql</div>
+      <div class="sql-filename">funnel_drop_off.sql</div>
     </div>
-    <pre><span class="cm">-- Aggregate borrower risk metrics by tier to support portfolio monitoring</span>
+    <pre><span class="cm">-- Stage-by-stage funnel metrics with risk tier cut</span>
 
-<span class="kw">WITH</span> <span class="tl">risk_tiers</span> <span class="kw">AS</span> (
+<span class="kw">WITH</span> <span class="tl">funnel_base</span> <span class="kw">AS</span> (
     <span class="kw">SELECT</span>
-        borrower_id,
-        predicted_default_proba,
-        actual_default,
-        loan_amount,
-        <span class="kw">CASE</span>
-            <span class="kw">WHEN</span> predicted_default_proba &lt; <span class="num">0.10</span> <span class="kw">THEN</span> <span class="str">'Tier 1 — Low Risk'</span>
-            <span class="kw">WHEN</span> predicted_default_proba &lt; <span class="num">0.15</span> <span class="kw">THEN</span> <span class="str">'Tier 2 — Moderate Risk'</span>
-            <span class="kw">WHEN</span> predicted_default_proba &lt; <span class="num">0.20</span> <span class="kw">THEN</span> <span class="str">'Tier 3 — Elevated Risk'</span>
-            <span class="kw">ELSE</span>                                    <span class="str">'Tier 4 — High Risk (Declined)'</span>
-        <span class="kw">END AS</span> risk_tier,
-        <span class="kw">CASE WHEN</span> predicted_default_proba &lt; <span class="num">0.15</span> <span class="kw">THEN</span> <span class="num">1</span> <span class="kw">ELSE</span> <span class="num">0</span> <span class="kw">END AS</span> approved
-    <span class="kw">FROM</span> borrower_predictions
+        session_id, merchant_id, risk_tier,
+        <span class="fn">DATE_TRUNC</span>(<span class="str">'week'</span>, session_date)  <span class="kw">AS</span> session_week,
+        reached_page_load,
+        passed_bnpl_click,
+        passed_form_start,
+        passed_form_complete,
+        passed_approved,
+        passed_purchase_complete
+    <span class="kw">FROM</span> funnel_events
 ),
 
-<span class="tl">portfolio_summary</span> <span class="kw">AS</span> (
+<span class="tl">overall_funnel</span> <span class="kw">AS</span> (
     <span class="kw">SELECT</span>
-        risk_tier,
-        <span class="fn">COUNT</span>(*)                                        <span class="kw">AS</span> total_applicants,
-        <span class="fn">SUM</span>(approved)                                   <span class="kw">AS</span> approved_count,
-        <span class="fn">ROUND</span>(<span class="fn">AVG</span>(approved) * <span class="num">100</span>, <span class="num">1</span>)                   <span class="kw">AS</span> approval_rate_pct,
-        <span class="fn">ROUND</span>(<span class="fn">AVG</span>(<span class="kw">CASE WHEN</span> approved = <span class="num">1</span>
-                       <span class="kw">THEN</span> actual_default <span class="kw">END</span>) * <span class="num">100</span>, <span class="num">1</span>) <span class="kw">AS</span> default_rate_pct,
-        <span class="fn">SUM</span>(<span class="kw">CASE WHEN</span> approved = <span class="num">1</span>
-                 <span class="kw">THEN</span> loan_amount <span class="kw">END</span>)                  <span class="kw">AS</span> total_approved_volume
-    <span class="kw">FROM</span> risk_tiers
-    <span class="kw">GROUP BY</span> risk_tier
+        <span class="str">'Overall'</span>                                       <span class="kw">AS</span> segment,
+        <span class="fn">SUM</span>(reached_page_load)                          <span class="kw">AS</span> page_loads,
+        <span class="fn">SUM</span>(passed_approved)                            <span class="kw">AS</span> approvals,
+        <span class="fn">SUM</span>(passed_purchase_complete)                   <span class="kw">AS</span> purchases,
+        <span class="fn">ROUND</span>(<span class="fn">AVG</span>(passed_bnpl_click)         * <span class="num">100</span>, <span class="num">1</span>) <span class="kw">AS</span> click_rate_pct,
+        <span class="fn">ROUND</span>(<span class="fn">AVG</span>(passed_approved)           * <span class="num">100</span>, <span class="num">1</span>) <span class="kw">AS</span> approval_rate_pct,
+        <span class="fn">ROUND</span>(<span class="fn">AVG</span>(passed_purchase_complete)  * <span class="num">100</span>, <span class="num">1</span>) <span class="kw">AS</span> purchase_rate_pct,
+        <span class="cm">-- End-to-end conversion</span>
+        <span class="fn">ROUND</span>(
+            <span class="fn">SUM</span>(passed_purchase_complete) * <span class="num">1.0</span>
+            / <span class="fn">NULLIF</span>(<span class="fn">SUM</span>(reached_page_load), <span class="num">0</span>) * <span class="num">100</span>
+        , <span class="num">1</span>)                                            <span class="kw">AS</span> e2e_conversion_pct
+    <span class="kw">FROM</span> funnel_base
 )
 
-<span class="kw">SELECT</span> *, <span class="fn">ROUND</span>(estimated_loss_exposure / total_approved_volume * <span class="num">100</span>, <span class="num">1</span>) <span class="kw">AS</span> loss_rate_pct
-<span class="kw">FROM</span> <span class="tl">portfolio_summary</span>
-<span class="kw">ORDER BY</span> risk_tier;</pre>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> <span class="tl">overall_funnel</span>
+<span class="kw">UNION ALL</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> tier_funnel
+<span class="kw">ORDER BY</span> segment;</pre>
   </div>
 </section>
 
 <hr class="divider"/>
 
 <!-- TOOLS -->
-<section id="tools">
+<section>
   <h2>Tools & Stack</h2>
   <div class="tools-row">
     <span class="tool-tag">Python</span>
-    <span class="tool-tag">scikit-learn</span>
     <span class="tool-tag">pandas</span>
     <span class="tool-tag">matplotlib</span>
-    <span class="tool-tag">seaborn</span>
+    <span class="tool-tag">numpy</span>
     <span class="tool-tag">SQL</span>
     <span class="tool-tag">Jupyter Notebooks</span>
     <span class="tool-tag">Claude Code</span>
@@ -663,7 +622,8 @@
     <span class="tool-tag">GitHub</span>
   </div>
   <p style="font-size:0.8rem; color:var(--slate); margin-top:1rem;">
-    Data: <a href="https://www.kaggle.com/c/GiveMeSomeCredit" style="color:var(--teal);">Give Me Some Credit — Kaggle</a> (150K real borrower records)
+    All data synthetic — generated with a reproducible Python simulator (see <code style="font-family:var(--mono); color:var(--teal); font-size:0.8rem;">data/generate_data.py</code>).
+    No proprietary or real customer data used.
   </p>
 </section>
 
@@ -672,30 +632,41 @@
   <p>Anwida Prompijit · Ph.D. · anwida@gmail.com</p>
   <div class="footer-links">
     <a href="https://ap-thinks.github.io/">← All Projects</a>
-    <a href="https://github.com/ap-thinks/credit-default-prediction">GitHub Repo →</a>
+    <a href="https://github.com/ap-thinks/checkout-conversion-funnel">GitHub Repo →</a>
   </div>
 </footer>
 
 <script>
-  // Animate stat counters on load
+  // Animate stat counters
   function animateCount(id, target, decimals, suffix) {
     const el = document.getElementById(id);
-    const duration = 1200;
-    const steps = 50;
-    const interval = duration / steps;
-    let current = 0;
-    const increment = target / steps;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= target) { current = target; clearInterval(timer); }
-      el.textContent = current.toFixed(decimals) + suffix;
+    const steps = 50, interval = 1200 / steps;
+    let cur = 0;
+    const inc = target / steps;
+    const t = setInterval(() => {
+      cur += inc;
+      if (cur >= target) { cur = target; clearInterval(t); }
+      el.textContent = cur.toFixed(decimals) + suffix;
     }, interval);
   }
+
+  // Animate funnel bars
+  function animateFunnel() {
+    const bars = document.querySelectorAll('.funnel-bar');
+    bars.forEach((bar, i) => {
+      const target = parseInt(bar.dataset.target);
+      setTimeout(() => { bar.style.width = target + '%'; }, i * 120);
+    });
+  }
+
   window.addEventListener('load', () => {
-    setTimeout(() => animateCount('auc-rf',   0.87,  2, ''), 900);
-    setTimeout(() => animateCount('auc-n',    150,   0, 'K'), 900);
-    setTimeout(() => animateCount('auc-base', 6.7,   1, '%'), 900);
-    setTimeout(() => animateCount('auc-feat', 15,    0, ''), 900);
+    setTimeout(() => {
+      animateCount('s1', 50, 0, 'K');
+      animateCount('s2',  6, 0, '');
+      animateCount('s3', 13, 0, 'pp');
+      animateCount('s4', 28, 0, '%');
+      animateFunnel();
+    }, 400);
   });
 </script>
 </body>
